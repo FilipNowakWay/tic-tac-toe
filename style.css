@@ -1,15 +1,268 @@
-.board_entry_piece {
-    background-color: gray;
-    width: 80%;
-    height: 80px;
-    margin: 5px;
-    border: 1px salmon solid;
-    text-align: center;
-    font-size: 3rem;
+/* --------------------------------------------------
+   Tic-Tac-Toe — warm minimal theme
+   -------------------------------------------------- */
+
+:root {
+    color-scheme: light;
+
+    --bg: #f7f4ef;
+    --surface: #fffdfa;
+    --ink: #201d1a;
+    --ink-soft: #3a342f;
+    --muted: #6e655d;
+    --line: #e5ded4;
+    --wash: #f3ede5;
+    --accent: #c56b4a;
+    --accent-soft: rgba(197, 107, 74, 0.16);
+    --ring: rgba(197, 107, 74, 0.3);
+
+    --radius-sm: 0.6rem;
+    --radius-lg: 1.15rem;
+
+    --shadow-board:
+        0 1px 2px rgba(32, 29, 26, 0.05),
+        0 22px 45px -30px rgba(32, 29, 26, 0.4);
+
+    --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, sans-serif;
 }
 
-.board{
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+
+        --bg: #151311;
+        --surface: #201d1a;
+        --ink: #f4efe9;
+        --ink-soft: #d8d0c7;
+        --muted: #a59b91;
+        --line: #322d28;
+        --wash: #292521;
+        --accent: #e08e6f;
+        --accent-soft: rgba(224, 142, 111, 0.18);
+        --ring: rgba(224, 142, 111, 0.32);
+
+        --shadow-board:
+            0 1px 2px rgba(0, 0, 0, 0.25),
+            0 24px 50px -30px rgba(0, 0, 0, 0.8);
+    }
+}
+
+/* Page shell */
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.85rem, 2.5vw, 1.15rem);
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: clamp(1.75rem, 6vw, 3.5rem) clamp(1.25rem, 4vw, 2rem);
+    background:
+        radial-gradient(70rem 42rem at 50% -18%, var(--surface), transparent 62%),
+        var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Player setup */
+
+body > div:first-child {
     display: grid;
-    grid-template-columns: repeat(3,1fr);
-    grid-template-rows: repeat(3,1fr);
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.7rem 0.9rem;
+    width: min(100%, 22rem);
+    margin-bottom: clamp(0.6rem, 2vw, 1rem);
+}
+
+body > div:first-child label {
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+body > div:first-child button {
+    grid-column: 1 / -1;
+    margin-top: 0.15rem;
+}
+
+input[type="text"] {
+    width: 100%;
+    min-width: 0;
+    min-height: 2.75rem;
+    padding: 0.55rem 0.8rem;
+    color: var(--ink);
+    font-size: 0.95rem;
+    caret-color: var(--accent);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    outline: none;
+    transition:
+        border-color 160ms ease,
+        box-shadow 160ms ease,
+        background-color 160ms ease;
+}
+
+input[type="text"]:hover {
+    border-color: var(--muted);
+}
+
+input[type="text"]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--ring);
+}
+
+/* Buttons */
+
+button {
+    min-height: 2.75rem;
+    padding: 0.6rem 1.1rem;
+    color: var(--bg);
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    background: var(--ink);
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition:
+        background-color 160ms ease,
+        border-color 160ms ease,
+        color 160ms ease,
+        transform 120ms ease,
+        box-shadow 160ms ease;
+}
+
+button:hover {
+    background: var(--ink-soft);
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+button:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--ring);
+}
+
+/* Board */
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 1px;
+    width: min(100%, 22rem);
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-board);
+}
+
+.board_entry_piece {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    color: var(--ink);
+    font-size: clamp(2.5rem, 11vw, 3.5rem);
+    font-weight: 500;
+    line-height: 1;
+    background: var(--surface);
+    border: 0;
+    cursor: pointer;
+    user-select: none;
+    touch-action: manipulation;
+    transition: background-color 140ms ease;
+}
+
+.board_entry_piece:empty:active {
+    background: var(--accent-soft);
+}
+
+.board_entry_piece:not(:empty) {
+    cursor: default;
+}
+
+@media (hover: hover) {
+    .board_entry_piece:empty:hover {
+        background: var(--wash);
+    }
+}
+
+/* Status message */
+
+#msg {
+    width: min(100%, 22rem);
+    min-height: 1.6em;
+    color: var(--ink-soft);
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+    text-align: center;
+}
+
+/* Restart */
+
+#restart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+}
+
+.restartBtn {
+    color: var(--ink-soft);
+    background: transparent;
+    border-color: var(--line);
+}
+
+.restartBtn:hover {
+    color: var(--ink);
+    background: var(--wash);
+    border-color: var(--muted);
+}
+
+/* Small screens */
+
+@media (max-width: 26rem) {
+    body > div:first-child {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.5rem;
+    }
+
+    body > div:first-child label:not(:first-child) {
+        margin-top: 0.35rem;
+    }
+
+    body > div:first-child button {
+        margin-top: 0.5rem;
+    }
+}
+
+/* Details */
+
+::selection {
+    color: var(--ink);
+    background: var(--accent-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }

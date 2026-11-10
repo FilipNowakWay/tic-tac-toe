@@ -2,9 +2,11 @@
 
 A minimal two-player tic-tac-toe game built with vanilla HTML, CSS, and JavaScript.
 
+Live preview: [Play Tic-Tac-Toe](https://filipnowakway.github.io/tic-tac-toe/)
+
 ![Tic-Tac-Toe screenshot](./screenshot.png)
 
-## Features
+## Features https://filipnowakway.github.io/tic-tac-toe/
 
 - Local two-player game with custom names
 - Win, tie, and restart handling
